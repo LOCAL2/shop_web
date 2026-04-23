@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useShop } from "@/lib/context";
-import NotificationBell from "./NotificationBell";
 
 interface Props {
   children: React.ReactNode;
@@ -43,7 +42,6 @@ export default function StoreLayoutClient({ children, username, points }: Props)
                 <NavLink href="/products" active={pathname.startsWith("/products")}>สินค้า</NavLink>
                 {username ? (
                   <div className="flex items-center gap-2 ml-3">
-                    <NotificationBell />
                     <Link href="/profile"
                       className="flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all hover:opacity-75 active:scale-95 cursor-pointer"
                       style={{ border: "1px solid var(--border)", background: "var(--surface-2)" }}>
@@ -67,7 +65,6 @@ export default function StoreLayoutClient({ children, username, points }: Props)
 
               {/* Mobile right */}
               <div className="flex sm:hidden items-center gap-2">
-                {username && <NotificationBell />}
                 <button
                   onClick={() => setMenuOpen(v => !v)}
                   className="w-9 h-9 flex items-center justify-center rounded-xl cursor-pointer transition-colors"

@@ -4,8 +4,6 @@ import { db } from '@/lib/db'
 import { getSession } from '@/lib/session'
 import { revalidatePath } from 'next/cache'
 
-import { generateId } from '@/lib/store'
-
 export async function approveTopup(topupId: string) {
   const session = await getSession()
   if (!session?.isAdmin) throw new Error('Unauthorized')
@@ -26,12 +24,6 @@ export async function approveTopup(topupId: string) {
     args: [topupId],
   })
 
-  // Notification
-  await db.execute({
-    sql: 'INSERT INTO notifications (id, user_id, message) VALUES (?, ?, ?)',
-    args: [generateId(), topup.user_id, `เติม Point สำเร็จ +${Math.floor(topup.amount)} Point`],
-  })
-
   revalidatePath('/admin/topups')
 }
 
@@ -49,13 +41,6 @@ export async function rejectTopup(topupId: string, note: string) {
     sql: "UPDATE topups SET status = 'rejected', note = ? WHERE id = ?",
     args: [note || 'ถูกปฏิเสธ', topupId],
   })
-
-  if (topup) {
-    await db.execute({
-      sql: 'INSERT INTO notifications (id, user_id, message) VALUES (?, ?, ?)',
-      args: [generateId(), topup.user_id, `คำขอเติม Point ฿${topup.amount} ถูกปฏิเสธ${note ? `: ${note}` : ''}`],
-    })
-  }
 
   revalidatePath('/admin/topups')
 }

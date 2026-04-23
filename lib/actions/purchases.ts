@@ -56,12 +56,6 @@ export async function buyProduct(userId: string, productId: string, price: numbe
     await addUserAccountUsage(userId, accountId)
   }
 
-  // Notification to trigger SSE points update
-  await db.execute({
-    sql: 'INSERT INTO notifications (id, user_id, message) VALUES (?, ?, ?)',
-    args: [generateId(), userId, `ซื้อสินค้าสำเร็จ -${price} Point`],
-  })
-
   revalidatePath('/', 'layout')
   revalidatePath('/profile', 'page')
   revalidatePath('/purchases', 'page')

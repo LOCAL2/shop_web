@@ -11,7 +11,7 @@ const PROMPTPAY_NUMBER = '0966406893'
 interface Props { points: number }
 
 export default function TopupClient({ initialPoints }: { initialPoints: number }) {
-  const { points: livePoints, notifs } = useSSE()
+  const { points: livePoints } = useSSE()
   const points = livePoints ?? initialPoints
   const [slip, setSlip] = useState<File | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
@@ -21,16 +21,6 @@ export default function TopupClient({ initialPoints }: { initialPoints: number }
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
-
-  // เมื่อ admin อนุมัติ → reset กลับไปหน้า QR
-  useEffect(() => {
-    if (success && notifs.some(n => n.message.includes('สำเร็จ'))) {
-      setSuccess(false)
-      setSlip(null)
-      setPreview(null)
-      setAmount('')
-    }
-  }, [notifs])
 
   // Generate QR (no amount — open amount)
   useEffect(() => {
